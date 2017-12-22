@@ -1,0 +1,19 @@
+[user]
+	name = Iñaki Quesada
+	email = i.quesada@talentocorporativo.com
+[color]
+	ui = true
+[core]
+	autocrlf = false
+[push]
+	default = simple
+[pull]
+	rebase = true
+[rerere]
+	enabled = true
+[alias]
+	s = status -s
+	lg = log --oneline --decorate --all --graph
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+[merge]
+	tool = atom
