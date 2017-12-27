@@ -1,0 +1,8 @@
+windows:
+  - name: rails
+    root: ~/Proyectos
+    layout: main-vertical
+    panes:
+      - echo "server"
+      - echo "console"
+      - echo "bash"
