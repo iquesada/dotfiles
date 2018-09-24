@@ -19,4 +19,4 @@ Clone this repo in your root home directory. The repo's folder name has to be `d
 
 `./create-symlinks.py`
 
-This python script has been copied from another repo, but not from the author's repo. The author of this script is a mystery.
+This python script has been copied from another repo, but not from the author's repo. The author of this script is a mystery :ghost:
