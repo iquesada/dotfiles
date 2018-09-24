@@ -1,6 +1,6 @@
 [user]
 	name = Iñaki Quesada
-	email = i.quesada@talentocorporativo.com
+	email = iquesada@piedresybarro.com
 [color]
 	ui = true
 [core]
@@ -15,5 +15,8 @@
 	s = status -s
 	lg = log --oneline --decorate --all --graph
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	cp = cherry-pick
+        ck = checkout
+	ci = commit
 [merge]
 	tool = atom
