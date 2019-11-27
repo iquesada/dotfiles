@@ -19,12 +19,13 @@
 	s   = status -s
 	lg  = log --oneline --decorate --all --graph
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
-	cp  = cherry-pick
     co  = checkout
 	ci  = commit -m
     p   = push
     a   = add .
-    acp = !sh -c 'git add . && git commit -m "$1" && git push' -
+    acp = !sh -c 'git add . && git commit -m \"$1\" && git push' -
+    cp  = !sh -c 'git commit -m \"$1\" && git push' -
+    ac  = !sh -c 'git add . && git commit -m \"$1\"' -
     m   = checkout master
 [diff]
 	tool = default-difftool
