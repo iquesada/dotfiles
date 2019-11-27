@@ -1,3 +1,7 @@
+[url "git@github.com:"]
+        insteadOf = https://github.com/
+[url "git@gitlab.otters.xyz:"]
+        insteadOf = https://gitlab.otters.xyz/
 [user]
 	name = Iñaki Quesada
 	email = iquesada@piedresybarro.com
@@ -6,17 +10,25 @@
 [core]
 	autocrlf = false
 [push]
-	default = simple
+	default = current
 [pull]
 	rebase = true
 [rerere]
 	enabled = true
 [alias]
-	s = status -s
-	lg = log --oneline --decorate --all --graph
+	s   = status -s
+	lg  = log --oneline --decorate --all --graph
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
-	cp = cherry-pick
-        ck = checkout
-	ci = commit
+	cp  = cherry-pick
+    co  = checkout
+	ci  = commit -m
+    p   = push
+    a   = add .
+    acp = !sh -c 'git add . && git commit -m "$1" && git push' -
+    m   = checkout master
+[diff]
+	tool = default-difftool
+[difftool "default-difftool"]
+	cmd = code --wait --diff $LOCAL $REMOTE
 [merge]
-	tool = atom
+	tool = vim
