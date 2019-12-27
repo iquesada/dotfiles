@@ -22,6 +22,7 @@
     co  = checkout
 	ci  = commit -m
     p   = push
+    pl  = pull
     a   = add .
     acp = !sh -c 'git add . && git commit -m \"$1\" && git push' -
     cp  = !sh -c 'git commit -m \"$1\" && git push' -
