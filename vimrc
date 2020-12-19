@@ -1,7 +1,7 @@
 " vim-bootstrap b0a75e4
 
 "*****************************************************************************
-"" Vim-PLug core
+": Vim-PLug core
 "*****************************************************************************
 if has('vim_starting')
   set nocompatible               " Be iMproved
@@ -31,38 +31,61 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
+
+" Split and join code lines
+Plug 'AndrewRadev/splitjoin.vim'
+
+" NerdTree
 Plug 'scrooloose/nerdtree'
-Plug 'tpope/vim-fugitive'
+
+" Theme
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+
+" Git
+Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-rhubarb'
+
 Plug 'vim-scripts/grep.vim'
 Plug 'vim-scripts/CSApprox'
+
+" Highlight trailing whitespaces
 Plug 'bronson/vim-trailing-whitespace'
+
+" Close brackets, parenthesis, etc
 Plug 'Raimondi/delimitMate'
+
+" Show indentation vertical lines
 Plug 'Yggdroot/indentLine'
-Plug 'avelino/vim-bootstrap-updater'
-Plug 'sheerun/vim-polyglot'
+
+" Intellisense
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Test
 Plug 'janko-m/vim-test'
+
+" Flosting windows
 Plug 'voldikss/vim-floaterm'
+
+" Comment lines
+Plug 'tomtom/tcomment_vim'
+
+" Surrondings " ' ( {
+Plug 'tpope/vim-surround'
+
+" Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 else
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
   Plug 'junegunn/fzf.vim'
 endif
-let g:make = 'gmake'
-if exists('make')
-   let g:make = 'make'
-endif
-Plug 'Shougo/vimproc.vim', {'do': g:make}
 
 if v:version >= 703
   Plug 'Shougo/vimshell.vim'
 endif
-
-Plug 'honza/vim-snippets'
 
 "" Color
 Plug 'tomasr/molokai'
@@ -71,13 +94,14 @@ Plug 'tomasr/molokai'
 "" Custom bundles
 "*****************************************************************************
 
+Plug 'sbdchd/neoformat'
+
 " elixir
 Plug 'elixir-lang/vim-elixir'
 
 
 " erlang
 Plug 'jimenezrick/vimerl'
-
 
 " html
 "" HTML Bundle
@@ -265,6 +289,9 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
 
+" Format
+noremap <leader>ff :Neoformat<CR>
+
 "*****************************************************************************
 "" Abbreviations
 "*****************************************************************************
@@ -311,6 +338,12 @@ if g:vim_bootstrap_editor == 'nvim'
 else
   nnoremap <silent> <leader>sh :VimShellCreate<CR>
 endif
+
+" Splitjoin
+let g:splitjoin_split_mapping = ''
+let g:splitjoin_join_mapping = ''
+nmap <Leader>J :SplitjoinJoin<cr>
+nmap <Leader>S :SplitjoinSplit<cr>
 
 "*****************************************************************************
 "" Functions
@@ -458,6 +491,19 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>ft  <Plug>(coc-format-selected)
 nmap <leader>ft  <Plug>(coc-format-selected)
 
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
 " Disable visualbell
 set noerrorbells visualbell t_vb=
 if has('autocmd')
@@ -501,12 +547,44 @@ noremap <C-h> <C-w>h
 vmap < <gv
 vmap > >gv
 
+" Timeout
+set timeoutlen=300 ttimeoutlen=0
+
+" Save on focus lost
+autocmd BufLeave,FocusLost * silent! wall
+
+" Save and restore view on leave and enter
+if v:version >= 700
+  au BufLeave * let b:winview = winsaveview()
+  au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
+endif
+
+" Workspaces configuration
+let g:workspace_autosave = 0
+let g:workspace_autosave_always = 0
+let g:workspace_autosave_ignore = ['gitcommit', 'qf', 'floaterm']
+let g:workspace_autosave_untrailspaces = 0
+let g:workspace_session_name = '.session.vim'
+
+" hclfmt confinguration
+let g:hcl_fmt_autosave = 1
+
+" Workspaces configuration
+let g:workspace_autosave = 0
+
 "" Move visual block
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-"" Open current line on GitHub
+" Quickly source .vimrc
+nnoremap <leader>r :source $MYVIMRC<CR>
+
+" Quickly quit editting without save
+nnoremap <leader>qq :qa!<CR>
+
+"" Open on GitHub
 nnoremap <Leader>o :.Gbrowse<CR>
+nnoremap <Leader>op :Gbrowse<CR>
 
 "*****************************************************************************
 "" Custom configs
