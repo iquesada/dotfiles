@@ -1,11 +1,15 @@
-
 {
   "coc.preferences.colorSupport": false,
   "coc.preferences.extensionUpdateCheck": "weekly",
   "coc.preferences.formatOnSaveFiletypes": [
     "elixir",
     "json",
-    "js"
+    "js",
+    "ruby"
+  ],
+  "coc.preferences.rootPatterns": [
+    ".gitmodules",
+    ".vim"
   ],
   "coc.preferences.useQuickfixForLocations": true,
   "codeLens.enable": true,
@@ -20,6 +24,7 @@
     "ruby": "html"
   },
   "javascript.format.enabled": true,
+  "solargraph.useBundler": true,
   "suggest.enablePreview": true,
   "suggest.languageSourcePriority": 100,
   "suggest.localityBonus": false,
