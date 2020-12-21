@@ -75,6 +75,9 @@ Plug 'tomtom/tcomment_vim'
 " Surrondings " ' ( {
 Plug 'tpope/vim-surround'
 
+" Typescript
+Plug 'leafgarland/typescript-vim'
+
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -268,6 +271,9 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>ta :TestSuite<CR>
 nmap <silent> <leader>tl :TestLast<CR>
 nmap <silent> <leader>tg :TestVisit<CR>
+
+let g:test#javascript#runner = 'jest'
+let g:test#javascript#jest#file_pattern = '\v(__tests__/.*|(spec|[t|T]est))\.(js|jsx|coffee|ts|tsx)$'
 
 """"""""""""""""""""""""""
 " Floaterm configuration
