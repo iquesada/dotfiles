@@ -66,6 +66,9 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Test
 Plug 'janko-m/vim-test'
 
+" vimux
+Plug 'benmills/vimux'
+
 " Flosting windows
 Plug 'voldikss/vim-floaterm'
 
@@ -265,7 +268,7 @@ endif
 let test#filename_modifier = ":p"
 let test#neovim#term_position = "vert"
 let g:test#preserve_screen = 1
-let test#strategy = "floaterm"
+let test#strategy = "vimux"
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>ta :TestSuite<CR>
