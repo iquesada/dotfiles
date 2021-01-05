@@ -37,6 +37,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 
 " NerdTree
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Theme
 Plug 'vim-airline/vim-airline'
@@ -80,6 +81,15 @@ Plug 'tpope/vim-surround'
 
 " Typescript
 Plug 'leafgarland/typescript-vim'
+
+" HCL
+Plug 'jvirtanen/vim-hcl'
+
+" Nerdtree icons
+Plug 'ryanoasis/vim-devicons'
+
+" Spotify
+Plug 'HendrikPetertje/vimify'
 
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
@@ -188,6 +198,13 @@ else
     set shell=/bin/sh
 endif
 
+" Spotify
+nnoremap <leader>sp :SpPlay<CR>
+nnoremap <leader>st :SpToggle<CR>
+nnoremap <leader>sn :SpNext<CR>
+nnoremap <leader>sb :SpPrevious<CR>
+nnoremap <leader>ss :SpSearch
+
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
@@ -208,6 +225,7 @@ set gfn=Monospace\ 10
 if has("gui_running")
   if has("gui_mac") || has("gui_macvim")
     set guifont=Menlo:h12
+    " set guifont=JetBrains_Mono_Regular:h11
     set transparency=7
   endif
 else
@@ -329,6 +347,7 @@ let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeWinSize = 50
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <silent> <F2> :NERDTreeFind<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTreeToggle<CR>
 
 " grep.vim
@@ -670,6 +689,8 @@ endif
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
+
+let g:airline_powerline_fonts = 1
 
 if !exists('g:airline_powerline_fonts')
   let g:airline#extensions#tabline#left_sep = ' '
