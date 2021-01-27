@@ -88,9 +88,6 @@ Plug 'jvirtanen/vim-hcl'
 " Nerdtree icons
 Plug 'ryanoasis/vim-devicons'
 
-" Spotify
-Plug 'HendrikPetertje/vimify'
-
 " Tabularize (:Tab /=)
 Plug 'godlygeek/tabular'
 
@@ -117,7 +114,6 @@ Plug 'sbdchd/neoformat'
 
 " elixir
 Plug 'elixir-lang/vim-elixir'
-
 
 " erlang
 Plug 'jimenezrick/vimerl'
@@ -211,19 +207,16 @@ else
     set shell=/bin/sh
 endif
 
-" Spotify
-nnoremap <leader>sp :SpPlay<CR>
-nnoremap <leader>st :SpToggle<CR>
-nnoremap <leader>sn :SpNext<CR>
-nnoremap <leader>sb :SpPrevious<CR>
-nnoremap <leader>ss :SpSearch
-
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
 syntax on
 set ruler
 set number relativenumber
+
+set lazyredraw
+set ttyfast
+set cursorline
 
 let no_buffers_menu=1
 if !exists('g:not_finish_vimplug')
@@ -641,6 +634,10 @@ nnoremap <Leader>op :Gbrowse<CR>
 "*****************************************************************************
 "" Custom configs
 "*****************************************************************************
+
+" Foding
+set foldmethod=syntax
+set foldlevel=20
 
 " elixir
 
