@@ -90,7 +90,7 @@ Plug 'ryanoasis/vim-devicons'
 
 " Tabularize (:Tab /=)
 Plug 'godlygeek/tabular'
-
+"
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -213,6 +213,9 @@ endif
 syntax on
 set ruler
 set number relativenumber
+augroup toggle_relative_number
+autocmd InsertEnter * :setlocal norelativenumber
+autocmd InsertLeave * :setlocal relativenumber
 
 set lazyredraw
 set ttyfast
@@ -435,6 +438,10 @@ nnoremap <C-H> <C-W><C-H>
 
 set splitbelow
 set splitright
+
+"" Move visual selection
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 "" Git
 let g:fugitive_gitlab_domains = ['https://gitlab.otters.xyz/']
