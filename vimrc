@@ -194,6 +194,8 @@ set hlsearch
 set incsearch
 set ignorecase
 set smartcase
+" Search visually selected text
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
 "" Directories for swp files
 set nobackup
@@ -447,7 +449,7 @@ vnoremap K :m '<-2<CR>gv=gv
 let g:fugitive_gitlab_domains = ['https://gitlab.otters.xyz/']
 noremap <Leader>ga :Gwrite<CR>
 noremap <Leader>gc :Gcommit<CR>
-noremap <Leader>gph :Gpush<CR>
+noremap <Leader>gph :Git push<CR>
 noremap <Leader>gpf :Git push --force<CR>
 noremap <Leader>gpl :Gpull<CR>
 noremap <Leader>gs :Gstatus<CR>
