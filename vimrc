@@ -453,7 +453,7 @@ noremap <Leader>gph :Git push<CR>
 noremap <Leader>gpf :Git push --force<CR>
 noremap <Leader>gpl :Gpull<CR>
 noremap <Leader>gs :Gstatus<CR>
-noremap <Leader>gb :Gblame<CR>
+noremap <Leader>gb :Git blame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 noremap <Leader>ge :Gedit<CR>
