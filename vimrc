@@ -452,7 +452,7 @@ noremap <Leader>gc :Gcommit<CR>
 noremap <Leader>gph :Git push<CR>
 noremap <Leader>gpf :Git push --force<CR>
 noremap <Leader>gpl :Gpull<CR>
-noremap <Leader>gs :Gstatus<CR>
+noremap <Leader>gs :Git<CR>
 noremap <Leader>gb :Git blame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
@@ -637,8 +637,8 @@ nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>qq :qa!<CR>
 
 "" Open on GitHub
-nnoremap <Leader>o :.Gbrowse<CR>
-nnoremap <Leader>op :Gbrowse<CR>
+nnoremap <Leader>o :.GBrowse<CR>
+nnoremap <Leader>op :GBrowse<CR>
 
 "*****************************************************************************
 "" Custom configs
