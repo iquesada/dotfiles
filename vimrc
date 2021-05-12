@@ -94,6 +94,9 @@ Plug 'godlygeek/tabular'
 " Markdown viewer (please run first npm install -g livedown)
 Plug 'shime/vim-livedown'
 
+" Bracketed paste. Paste without the annoying autoindent
+Plug 'ConradIrwin/vim-bracketed-paste'
+
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
