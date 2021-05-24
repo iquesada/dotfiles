@@ -90,7 +90,10 @@ Plug 'ryanoasis/vim-devicons'
 
 " Tabularize (:Tab /=)
 Plug 'godlygeek/tabular'
-"
+
+" Markdown viewer (please run first npm install -g livedown)
+Plug 'shime/vim-livedown'
+
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -384,6 +387,9 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 nmap <Leader>J :SplitjoinJoin<cr>
 nmap <Leader>S :SplitjoinSplit<cr>
+
+" Markdown (livedown)
+nmap gm :LivedownToggle<cr>
 
 "*****************************************************************************
 "" Functions
