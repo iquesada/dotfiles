@@ -172,6 +172,11 @@ set bomb
 set binary
 set ttyfast
 
+"" NVim config
+if !has('nvim')
+  set ttymouse=xterm2
+endif
+
 "" Fix backspace indent
 set backspace=indent,eol,start
 
