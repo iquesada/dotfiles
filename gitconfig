@@ -2,6 +2,8 @@
         insteadOf = https://github.com/
 [url "git@gitlab.otters.xyz:"]
         insteadOf = https://gitlab.otters.xyz/
+[remote]
+  prune = true
 [user]
 	name = Iñaki Quesada
 	email = iquesada@piedresybarro.com
