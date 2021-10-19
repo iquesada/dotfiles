@@ -331,6 +331,7 @@ let g:go_highlight_generate_tags = 1
 
 nmap <silent> <leader>gt :GoTestFunc<CR>
 nmap <silent> <leader>gta :GoTest<CR>
+nmap <silent> <leader>gtt :GoAlternate<CR>
 
 """"""""""""""""""""""""""
 " vim-test configuration
