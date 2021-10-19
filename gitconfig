@@ -21,15 +21,18 @@
 	s   = status -s
 	lg  = log --oneline --decorate --all --graph
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    co  = checkout
+  co  = checkout
 	ci  = commit -m
-    p   = push
-    pl  = pull
-    a   = add .
-    acp = !sh -c 'git add . && git commit -m \"$1\" && git push' -
-    cp  = !sh -c 'git commit -m \"$1\" && git push' -
-    ac  = !sh -c 'git add . && git commit -m \"$1\"' -
-    m   = checkout master
+  p   = push
+  pl  = pull
+  a   = add .
+  acp = !sh -c 'git add . && git commit -m \"$1\" && git push' -
+  cp  = !sh -c 'git commit -m \"$1\" && git push' -
+  ac  = !sh -c 'git add . && git commit -m \"$1\"' -
+  m   = checkout master
+  ma  = checkout main
+  bcm = !sh -c 'git checkout master && git branch --merged | egrep -v \"(^\\*|master)\" | xargs git branch -d'
+  bc  = !sh -c 'git checkout main && git branch --merged | egrep -v \"(^\\*|main)\" | xargs git branch -d'
 [diff]
 	tool = default-difftool
 [difftool "default-difftool"]
