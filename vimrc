@@ -143,6 +143,7 @@ Plug 'tpope/vim-rake'
 Plug 'tpope/vim-projectionist'
 Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
+Plug 'ngmy/vim-rubocop'
 
 " Go
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -744,6 +745,10 @@ nnoremap <leader>rit  :RInlineTemp<cr>
 vnoremap <leader>rrlv :RRenameLocalVariable<cr>
 vnoremap <leader>rriv :RRenameInstanceVariable<cr>
 vnoremap <leader>rem  :RExtractMethod<cr>
+
+" Ruby rubocop
+let g:vimrubocop_keymap = 0
+nmap <Leader>rc :RuboCop<CR>
 
 
 "*****************************************************************************
