@@ -97,6 +97,9 @@ Plug 'shime/vim-livedown'
 " Bracketed paste. Paste without the annoying autoindent
 Plug 'ConradIrwin/vim-bracketed-paste'
 
+" Maximize panes
+Plug 'szw/vim-maximizer'
+
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -304,6 +307,9 @@ nnoremap N Nzzzv
 if exists("*fugitive#statusline")
   set statusline+=%{fugitive#statusline()}
 endif
+
+" maximize current split or return to previous
+noremap <C-w>m :MaximizerToggle<CR>
 
 """"""""""""""""""""""""""
 " Go configurations
