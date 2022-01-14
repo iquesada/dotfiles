@@ -9,7 +9,7 @@ endif
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-let g:vim_bootstrap_langs = "elixir,erlang,go,html,javascript,ruby"
+let g:vim_bootstrap_langs = "elixir,erlang,go,html,javascript,ruby,c++"
 let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
 if !filereadable(vimplug_exists)
@@ -126,6 +126,9 @@ Plug 'elixir-lang/vim-elixir'
 
 " erlang
 Plug 'jimenezrick/vimerl'
+
+" C++
+Plug 'octol/vim-cpp-enhanced-highlight'
 
 " html
 "" HTML Bundle
