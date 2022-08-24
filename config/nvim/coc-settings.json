@@ -1,5 +1,4 @@
 {
-  "coc.preferences.colorSupport": false,
   "coc.preferences.extensionUpdateCheck": "weekly",
   "coc.preferences.formatOnSaveFiletypes": [
     "elixir",
@@ -15,27 +14,16 @@
   "codeLens.enable": true,
   "diagnostic.messageTarget": "float",
   "diagnostic.enableMessage": "always",
-  "diagnostic.maxWindowHeight": 20,
   "diagnostic.checkCurrentLine": true,
-  "diagnostic.refreshAfterSave": false,
-  "eslint.autoFixOnSave": true,
-  "emmet.includeLanguages": {
-    "*.erb": "html",
-    "ruby": "html"
-  },
   "javascript.format.enabled": true,
   "solargraph.useBundler": true,
-  "suggest.enablePreview": true,
   "suggest.languageSourcePriority": 100,
   "suggest.localityBonus": false,
   "suggest.minTriggerInputLength": 1,
-  "suggest.noselect": false,
+  "suggest.noselect": true,
   "suggest.removeDuplicateItems": true,
   "tsserver.enableJavascript": true,
   "tsserver.formatOnType": false,
-  "yank.enableCompletion": false,
-  "yank.highlight.enable": false,
-  "yank.priority": 40,
   "languageserver": {
     "ccls": {
       "command": "ccls",
