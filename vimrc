@@ -320,6 +320,14 @@ noremap <C-w>m :MaximizerToggle<CR>
 """"""""""""""""""""""""""
 " Go configurations
 """"""""""""""""""""""""""
+"
+" Function to source only if file exists {
+function! SourceIfExists(file)
+  if filereadable(expand(a:file))
+    exe 'source' a:file
+  endif
+endfunction
+
 " disable all linters as that is taken care of by coc.nvim
 let g:go_diagnostics_enabled = 0
 let g:go_metalinter_enabled = []
@@ -342,9 +350,12 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
 
-nmap <silent> <leader>gt :GoTestFunc<CR>
-nmap <silent> <leader>gta :GoTest<CR>
+nmap <silent> <leader>gt :GoTestFuncEnv<CR>
+nmap <silent> <leader>gta :GoTestEnv<CR>
 nmap <silent> <leader>gtt :GoAlternate<CR>
+
+:command! GoTestFuncEnv :call SourceIfExists(".env") | GoTestFunc
+:command! GoTestEnv :call SourceIfExists(".env") | GoTest
 
 """"""""""""""""""""""""""
 " vim-test configuration
