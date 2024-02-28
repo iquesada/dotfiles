@@ -31,6 +31,11 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
+" Coc Elixir
+Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
+
+" Copilot
+Plug 'github/copilot.vim'
 
 " Split and join code lines
 Plug 'AndrewRadev/splitjoin.vim'
@@ -99,6 +104,9 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 
 " Maximize panes
 Plug 'szw/vim-maximizer'
+
+" Kotlin
+Plug 'udalov/kotlin-vim'
 
 " Fuzzy search
 if isdirectory('/usr/local/opt/fzf')
@@ -267,7 +275,7 @@ else
 
   " IndentLine
   let g:indentLine_enabled = 1
-  let g:indentLine_concealcursor = 0
+  let g:indentLine_concealcursor = 'nc'
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
 
