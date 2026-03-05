@@ -44,9 +44,6 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" Augment AI
-Plug 'augmentcode/augment.vim'
-
 " Theme
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -329,15 +326,6 @@ endif
 
 " maximize current split or return to previous
 noremap <C-w>m :MaximizerToggle<CR>
-
-""""""""""""""""""""""""""""
-" Augment AI configuration
-""""""""""""""""""""""""""""
-let g:augment_workspace_folders = ['~/Projects/']
-nnoremap <leader>ac :Augment chat<CR>
-vnoremap <leader>ac :Augment chat<CR>
-nnoremap <leader>an :Augment chat-new<CR>
-nnoremap <leader>at :Augment chat-toggle<CR>
 
 """"""""""""""""""""""""""
 " Go configurations
