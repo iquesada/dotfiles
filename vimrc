@@ -35,7 +35,7 @@ call plug#begin(expand('~/.vim/plugged'))
 Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
 
 " Copilot
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
 
 " Split and join code lines
 Plug 'AndrewRadev/splitjoin.vim'
@@ -43,6 +43,9 @@ Plug 'AndrewRadev/splitjoin.vim'
 " NerdTree
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" Augment AI
+Plug 'augmentcode/augment.vim'
 
 " Theme
 Plug 'vim-airline/vim-airline'
@@ -263,7 +266,7 @@ endif
 
 set mousemodel=popup
 set t_Co=256
-set guioptions=egmrti
+" set guioptions=egmrti
 set gfn=Monospace\ 10
 
 if has("gui_running")
@@ -326,6 +329,15 @@ endif
 
 " maximize current split or return to previous
 noremap <C-w>m :MaximizerToggle<CR>
+
+""""""""""""""""""""""""""""
+" Augment AI configuration
+""""""""""""""""""""""""""""
+let g:augment_workspace_folders = ['~/Projects/']
+nnoremap <leader>ac :Augment chat<CR>
+vnoremap <leader>ac :Augment chat<CR>
+nnoremap <leader>an :Augment chat-new<CR>
+nnoremap <leader>at :Augment chat-toggle<CR>
 
 """"""""""""""""""""""""""
 " Go configurations

@@ -24,6 +24,7 @@
   "suggest.removeDuplicateItems": true,
   "tsserver.enableJavascript": true,
   "tsserver.formatOnType": false,
+  "elixir.pathToElixirLS": "/home/iquesada/elixir-ls/release/language_server.sh",
   "languageserver": {
     "ccls": {
       "command": "ccls",
