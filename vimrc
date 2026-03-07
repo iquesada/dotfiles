@@ -34,9 +34,6 @@ call plug#begin(expand('~/.vim/plugged'))
 " Coc Elixir
 Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
 
-" Copilot
-" Plug 'github/copilot.vim'
-
 " Split and join code lines
 Plug 'AndrewRadev/splitjoin.vim'
 
@@ -95,6 +92,25 @@ Plug 'ryanoasis/vim-devicons'
 
 " Tabularize (:Tab /=)
 Plug 'godlygeek/tabular'
+
+"***************** Avante ***********************************
+" Deps
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+" Plug 'MeanderingProgrammer/render-markdown.nvim'
+Plug 'OXY2DEV/markview.nvim'
+
+" Optional deps
+Plug 'hrsh7th/nvim-cmp'
+Plug 'nvim-tree/nvim-web-devicons' "or Plug 'echasnovski/mini.icons'
+Plug 'HakonHarnes/img-clip.nvim'
+Plug 'zbirenbaum/copilot.lua'
+Plug 'stevearc/dressing.nvim' " for enhanced input UI
+Plug 'folke/snacks.nvim' " for modern input UI
+
+" Yay, pass source=true if you want to build from source
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+"----------------- Avante ------------------------------------
 
 " If you don't have nodejs and yarn
 " use pre build, add 'vim-plug' to the filetype list so vim-plug can update this plugin
@@ -241,6 +257,41 @@ else
 endif
 
 "*****************************************************************************
+"" Avante (Cursor)
+"*****************************************************************************
+autocmd! User avante.nvim
+lua << EOF
+require('avante').setup({
+  provider = "cursor",
+  mode = "agentic",
+  acp_providers = {
+    ["cursor"] = {
+      command = os.getenv("HOME") .. "/.local/bin/agent",
+      model = "us.anthropic.claude-opus-4.6-v1",
+      args = { "acp" },
+      auth_method = "cursor_login",
+      env = {
+        HOME = os.getenv("HOME"),
+        PATH = os.getenv("PATH"),
+      },
+    },
+  },
+  providers = {
+    bedrock = {
+      model = "us.anthropic.claude-opus-4.6-v1",
+      aws_profile = "bedrock",
+      aws_region = "us-east-1",
+    },
+  },
+  input = {
+    provider = "snacks",
+  }
+})
+EOF
+
+" let g.markview_filetypes = { "markdown", "norg", "rmd", "org", "vimwiki", "Avante" }
+
+"*****************************************************************************
 "" Visual Settings
 "*****************************************************************************
 syntax on
@@ -303,7 +354,8 @@ set gcr=a:blinkon0
 set scrolloff=3
 
 "" Status bar
-set laststatus=2
+" vies can only be collapsed with the global statusline
+set laststatus=3
 
 "" Use modeline overrides
 set modeline
