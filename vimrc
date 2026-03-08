@@ -27,6 +27,7 @@ endif
 
 " Required:
 call plug#begin(expand('~/.vim/plugged'))
+let g:plug_timeout = 300
 
 "*****************************************************************************
 "" Plug install packages
@@ -97,7 +98,7 @@ Plug 'godlygeek/tabular'
 " Deps
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
-" Plug 'MeanderingProgrammer/render-markdown.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'OXY2DEV/markview.nvim'
 
 " Optional deps
@@ -259,7 +260,6 @@ endif
 "*****************************************************************************
 "" Avante (Cursor)
 "*****************************************************************************
-autocmd! User avante.nvim
 lua << EOF
 require('avante').setup({
   provider = "cursor",
@@ -289,7 +289,17 @@ require('avante').setup({
 })
 EOF
 
-" let g.markview_filetypes = { "markdown", "norg", "rmd", "org", "vimwiki", "Avante" }
+
+"*****************************************************************************
+"" MarkView
+"*****************************************************************************
+lua << EOF
+require('markview').setup({
+  filetypes = { "markdown", "norg", "rmd", "org", "vimwiki", "Avante" },
+  buf_ignore = {},
+  max_length = 99999,
+})
+EOF
 
 "*****************************************************************************
 "" Visual Settings
