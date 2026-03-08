@@ -203,8 +203,6 @@ filetype plugin indent on
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
-set bomb
-set binary
 set ttyfast
 
 "" NVim config
@@ -260,7 +258,26 @@ endif
 "*****************************************************************************
 "" Avante (Cursor)
 "*****************************************************************************
+let g:extra_whitespace_ignored_filetypes = ['Avante', 'AvanteInput', 'AvanteSelectedCode', 'AvanteSelectedFiles', 'AvanteTodos']
+let g:delimitMate_excluded_ft = 'Avante,AvanteInput'
+
+augroup avante_visual_cleanup
+  autocmd!
+  autocmd FileType Avante,AvanteInput,AvanteSelectedCode,AvanteSelectedFiles,AvanteTodos setlocal
+    \ nonumber norelativenumber
+    \ signcolumn=no
+    \ colorcolumn=
+    \ nocursorline
+    \ nofoldenable foldcolumn=0
+    \ conceallevel=2 concealcursor=nvic
+    \ wrap linebreak
+  autocmd FileType Avante,AvanteInput,AvanteSelectedCode,AvanteSelectedFiles,AvanteTodos let b:coc_enabled = 0
+  autocmd FileType Avante,AvanteInput,AvanteSelectedCode,AvanteSelectedFiles,AvanteTodos let b:gitgutter_enabled = 0
+augroup END
+
 lua << EOF
+vim.lsp.handlers['_cursor/update_todos'] = function() end
+
 require('avante').setup({
   provider = "cursor",
   mode = "agentic",
@@ -303,7 +320,7 @@ require('avante').setup({
     ---@type "right" | "left" | "top" | "bottom"
     position = "right", -- the position of the sidebar
     wrap = true, -- similar to vim.o.wrap
-    width = 30, -- default % based on available width
+    width = 40, -- default % based on available width
     sidebar_header = {
       enabled = true, -- true, false to enable/disable the header
       align = "center", -- left, center, right for title
@@ -360,9 +377,12 @@ EOF
 "*****************************************************************************
 lua << EOF
 require('markview').setup({
-  filetypes = { "markdown", "norg", "rmd", "org", "vimwiki", "Avante" },
-  buf_ignore = {},
-  max_length = 99999,
+  preview = {
+    filetypes = { "markdown", "quarto", "rmd", "typst", "Avante" },
+    ignore_buftypes = {},
+    buf_ignore = {},
+    max_length = 99999,
+  },
 })
 EOF
 
@@ -373,10 +393,12 @@ syntax on
 set ruler
 set number relativenumber
 augroup toggle_relative_number
-autocmd InsertEnter * :setlocal norelativenumber
-autocmd InsertLeave * :setlocal relativenumber
+  autocmd!
+  autocmd InsertEnter * if &filetype !~# '^Avante' | setlocal norelativenumber | endif
+  autocmd InsertLeave * if &filetype !~# '^Avante' | setlocal relativenumber | endif
+augroup END
 
-set lazyredraw
+set nolazyredraw
 set ttyfast
 set cursorline
 
@@ -406,6 +428,7 @@ else
   let g:indentLine_concealcursor = 'nc'
   let g:indentLine_char = '┆'
   let g:indentLine_faster = 1
+  let g:indentLine_fileTypeExclude = ['Avante', 'AvanteInput', 'markdown', 'help']
 
   
   if $COLORTERM == 'gnome-terminal'
@@ -527,6 +550,8 @@ nnoremap <Leader>n :FloatermNew ranger<Enter>
 let g:airline_theme = 'angr'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#exclude_preview = 1
+let g:airline#extensions#tabline#ignore_bufadd_pat = 'Avante'
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
 
@@ -718,7 +743,7 @@ endif
 "" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
 augroup vimrc-sync-fromstart
   autocmd!
-  autocmd BufEnter * :syntax sync maxlines=200
+  autocmd BufEnter * if &filetype !~# '^Avante' | :syntax sync maxlines=200 | endif
 augroup END
 
 "" Remember cursor position
@@ -867,7 +892,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd CursorHold * if &filetype !~# '^Avante' | silent call CocActionAsync('highlight') | endif
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
