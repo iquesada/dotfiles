@@ -278,6 +278,9 @@ augroup END
 lua << EOF
 vim.lsp.handlers['_cursor/update_todos'] = function() end
 
+vim.treesitter.language.register("markdown", "Avante")
+vim.treesitter.language.register("markdown", "AvanteInput")
+
 require('avante').setup({
   provider = "cursor",
   mode = "agentic",
