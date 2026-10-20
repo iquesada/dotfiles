@@ -94,29 +94,13 @@ Plug 'ryanoasis/vim-devicons'
 " Tabularize (:Tab /=)
 Plug 'godlygeek/tabular'
 
-"***************** Avante ***********************************
-" Deps
-Plug 'nvim-lua/plenary.nvim'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'OXY2DEV/markview.nvim'
-
-" Optional deps
-Plug 'hrsh7th/nvim-cmp'
-Plug 'nvim-tree/nvim-web-devicons' "or Plug 'echasnovski/mini.icons'
-Plug 'HakonHarnes/img-clip.nvim'
-Plug 'zbirenbaum/copilot.lua'
-Plug 'stevearc/dressing.nvim' " for enhanced input UI
-Plug 'folke/snacks.nvim' " for modern input UI
-
-" Yay, pass source=true if you want to build from source
-Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
-"----------------- Avante ------------------------------------
-
 " If you don't have nodejs and yarn
 " use pre build, add 'vim-plug' to the filetype list so vim-plug can update this plugin
 " see: https://github.com/iamcco/markdown-preview.nvim/issues/50
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+
+" Markdown syntax, folding and concealing (requires tabular, loaded above)
+Plug 'preservim/vim-markdown'
 
 " Bracketed paste. Paste without the annoying autoindent
 Plug 'ConradIrwin/vim-bracketed-paste'
@@ -255,139 +239,6 @@ else
     set shell=/bin/sh
 endif
 
-"*****************************************************************************
-"" Avante (Cursor)
-"*****************************************************************************
-let g:extra_whitespace_ignored_filetypes = ['Avante', 'AvanteInput', 'AvanteSelectedCode', 'AvanteSelectedFiles', 'AvanteTodos']
-let g:delimitMate_excluded_ft = 'Avante,AvanteInput'
-
-augroup avante_visual_cleanup
-  autocmd!
-  autocmd FileType Avante,AvanteInput,AvanteSelectedCode,AvanteSelectedFiles,AvanteTodos setlocal
-    \ nonumber norelativenumber
-    \ signcolumn=no
-    \ colorcolumn=
-    \ nocursorline
-    \ nofoldenable foldcolumn=0
-    \ conceallevel=2 concealcursor=nvic
-    \ wrap linebreak
-  autocmd FileType Avante,AvanteInput,AvanteSelectedCode,AvanteSelectedFiles,AvanteTodos let b:coc_enabled = 0
-  autocmd FileType Avante,AvanteInput,AvanteSelectedCode,AvanteSelectedFiles,AvanteTodos let b:gitgutter_enabled = 0
-augroup END
-
-lua << EOF
-vim.lsp.handlers['_cursor/update_todos'] = function() end
-
-vim.treesitter.language.register("markdown", "Avante")
-vim.treesitter.language.register("markdown", "AvanteInput")
-
-require('avante').setup({
-  provider = "cursor",
-  mode = "agentic",
-  acp_providers = {
-    ["cursor"] = {
-      command = os.getenv("HOME") .. "/.local/bin/agent",
-      model = "us.anthropic.claude-opus-4.6-v1",
-      args = { "acp" },
-      auth_method = "cursor_login",
-      env = {
-        HOME = os.getenv("HOME"),
-        PATH = os.getenv("PATH"),
-      },
-    },
-  },
-  providers = {
-    bedrock = {
-      model = "us.anthropic.claude-opus-4.6-v1",
-      aws_profile = "bedrock",
-      aws_region = "us-east-1",
-    },
-  },
-  input = {
-    provider = "snacks",
-  },
-  behaviour = {
-    auto_suggestions = false,
-    auto_set_highlight_group = true,
-    auto_set_keymaps = true,
-    auto_apply_diff_after_generation = false,
-    support_paste_from_clipboard = false,
-    minimize_diff = true,
-    enable_token_counting = true,
-    auto_add_current_file = true,
-    auto_approve_tool_permissions = true,
-    confirmation_ui_style = "inline_buttons",
-    acp_follow_agent_locations = true,
-  },
-  windows = {
-    ---@type "right" | "left" | "top" | "bottom"
-    position = "right", -- the position of the sidebar
-    wrap = true, -- similar to vim.o.wrap
-    width = 40, -- default % based on available width
-    sidebar_header = {
-      enabled = true, -- true, false to enable/disable the header
-      align = "center", -- left, center, right for title
-      rounded = true,
-    },
-    spinner = {
-      editing = { "⡀", "⠄", "⠂", "⠁", "⠈", "⠐", "⠠", "⢀", "⣀", "⢄", "⢂", "⢁", "⢈", "⢐", "⢠", "⣠", "⢤", "⢢", "⢡", "⢨", "⢰", "⣰", "⢴", "⢲", "⢱", "⢸", "⣸", "⢼", "⢺", "⢹", "⣹", "⢽", "⢻", "⣻", "⢿", "⣿" },
-      generating = { "·", "✢", "✳", "∗", "✻", "✽" }, -- Spinner characters for the 'generating' state
-      thinking = { "🤯", "🙄" }, -- Spinner characters for the 'thinking' state
-    },
-    input = {
-      prefix = "> ",
-      height = 8, -- Height of the input window in vertical layout
-    },
-    edit = {
-      border = "rounded",
-      start_insert = true, -- Start insert mode when opening the edit window
-    },
-    ask = {
-      floating = false, -- Open the 'AvanteAsk' prompt in a floating window
-      start_insert = true, -- Start insert mode when opening the ask window
-      border = "rounded",
-      ---@type "ours" | "theirs"
-      focus_on_apply = "ours", -- which diff to focus after applying
-    },
-  },
-  highlights = {
-    ---@type AvanteConflictHighlights
-    diff = {
-      current = "DiffText",
-      incoming = "DiffAdd",
-    },
-  },
-  --- @class AvanteConflictUserConfig
-  diff = {
-    autojump = true,
-    ---@type string | fun(): any
-    list_opener = "copen",
-    --- Override the 'timeoutlen' setting while hovering over a diff (see :help timeoutlen).
-    --- Helps to avoid entering operator-pending mode with diff mappings starting with `c`.
-    --- Disable by setting to -1.
-    override_timeoutlen = 500,
-  },
-  suggestion = {
-    debounce = 600,
-    throttle = 600,
-  },
-})
-EOF
-
-
-"*****************************************************************************
-"" MarkView
-"*****************************************************************************
-lua << EOF
-require('markview').setup({
-  preview = {
-    filetypes = { "markdown", "quarto", "rmd", "typst", "Avante" },
-    ignore_buftypes = {},
-    buf_ignore = {},
-    max_length = 99999,
-  },
-})
-EOF
 
 "*****************************************************************************
 "" Visual Settings
