@@ -32,9 +32,6 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
-" Coc Elixir
-Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
-
 " Split and join code lines
 Plug 'AndrewRadev/splitjoin.vim'
 
@@ -42,18 +39,15 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" Theme
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Status line and buffer tabline
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
 
 " Git
 Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-rhubarb'
-
-Plug 'vim-scripts/grep.vim'
-Plug 'vim-scripts/CSApprox'
 
 " Highlight trailing whitespaces
 Plug 'bronson/vim-trailing-whitespace'
@@ -75,9 +69,6 @@ Plug 'benmills/vimux'
 
 " Flosting windows
 Plug 'voldikss/vim-floaterm'
-
-" Comment lines
-Plug 'tomtom/tcomment_vim'
 
 " Surrondings " ' ( {
 Plug 'tpope/vim-surround'
@@ -102,9 +93,6 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' 
 " Markdown syntax, folding and concealing (requires tabular, loaded above)
 Plug 'preservim/vim-markdown'
 
-" Bracketed paste. Paste without the annoying autoindent
-Plug 'ConradIrwin/vim-bracketed-paste'
-
 " Maximize panes
 Plug 'szw/vim-maximizer'
 
@@ -119,13 +107,8 @@ else
   Plug 'junegunn/fzf.vim'
 endif
 
-if v:version >= 703
-  Plug 'Shougo/vimshell.vim'
-endif
-
 "" Color
 Plug 'NLKNguyen/papercolor-theme'
-Plug 'sainnhe/everforest'
 
 "*****************************************************************************
 "" Custom bundles
@@ -136,17 +119,12 @@ Plug 'sbdchd/neoformat'
 " elixir
 Plug 'elixir-lang/vim-elixir'
 
-" erlang
-Plug 'jimenezrick/vimerl'
-
 " C++
 Plug 'octol/vim-cpp-enhanced-highlight'
 
 " html
 "" HTML Bundle
 Plug 'hail2u/vim-css3-syntax'
-Plug 'gorodinskiy/vim-coloresque'
-Plug 'tpope/vim-haml'
 Plug 'mattn/emmet-vim'
 
 
@@ -159,9 +137,6 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-projectionist'
-Plug 'thoughtbot/vim-rspec'
-Plug 'ecomba/vim-ruby-refactoring'
-Plug 'ngmy/vim-rubocop'
 
 " Go
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -275,8 +250,6 @@ if has("gui_running")
     set transparency=7
   endif
 else
-  let g:CSApprox_loaded = 1
-
   " IndentLine
   let g:indentLine_enabled = 1
   let g:indentLine_concealcursor = 'nc'
@@ -400,14 +373,21 @@ hi FloatermBorderNF guibg='#4c556a' guifg='#ABB9CF'
 map <C-n> :FloatermNew ranger<CR>
 nnoremap <Leader>n :FloatermNew ranger<Enter>
 
-" vim-airline
-let g:airline_theme = 'angr'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#exclude_preview = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = 'Avante'
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline_skip_empty_sections = 1
+" lightline
+set noshowmode
+set showtabline=2
+let g:lightline = {
+      \ 'colorscheme': 'PaperColor',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'tabline': { 'left': [ [ 'buffers' ] ], 'right': [ [] ] },
+      \ 'component_function': { 'gitbranch': 'FugitiveHead' },
+      \ 'component_expand': { 'buffers': 'lightline#bufferline#buffers' },
+      \ 'component_type': { 'buffers': 'tabsel' },
+      \ }
+let g:lightline#bufferline#enable_devicons = 1
+let g:lightline#bufferline#unnamed = '[No Name]'
 
 " Format
 noremap <leader>ff :Neoformat<CR>
@@ -444,21 +424,15 @@ nnoremap <silent> <F2> :NERDTreeFind<CR>
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTreeToggle<CR>
 
-" grep.vim
-nnoremap <silent> <leader>f :Rgrep<CR>
-let Grep_Default_Options = '-IR'
-let Grep_Skip_Files = '*.log *.db'
-let Grep_Skip_Dirs = '.git node_modules'
-
-" vimshell.vim
-let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
-let g:vimshell_prompt =  '$ '
+" Grep project for word under cursor
+nnoremap <silent> <leader>f :Rg <C-R><C-W><CR>
 
 " terminal emulation
-if g:vim_bootstrap_editor == 'nvim'
-  nnoremap <silent> <leader>sh :terminal<CR>
-else
-  nnoremap <silent> <leader>sh :VimShellCreate<CR>
+nnoremap <silent> <leader>sh :terminal<CR>
+
+" Comment lines (gc/gcc). Built in on Neovim, a bundled package on Vim
+if !has('nvim')
+  packadd! comment
 endif
 
 " Splitjoin
@@ -883,7 +857,7 @@ augroup END
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_rails = 1
-let g:coc_global_extensions = ['coc-solargraph']
+let g:coc_global_extensions = ['coc-solargraph', 'coc-elixir']
 autocmd BufRead *.xlsx.axlsx set filetype=ruby
 
 augroup vimrc-ruby
@@ -892,27 +866,10 @@ augroup vimrc-ruby
   autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
 augroup END
 
-" For ruby refactory
-if has('nvim')
-  runtime! macros/matchit.vim
-else
+" Extended % matching (def/end, if/end...). Neovim loads it by default
+if !has('nvim')
   packadd! matchit
 endif
-
-" Ruby refactory
-nnoremap <leader>rap  :RAddParameter<cr>
-nnoremap <leader>rcpc :RConvertPostConditional<cr>
-nnoremap <leader>rel  :RExtractLet<cr>
-vnoremap <leader>rec  :RExtractConstant<cr>
-vnoremap <leader>relv :RExtractLocalVariable<cr>
-nnoremap <leader>rit  :RInlineTemp<cr>
-vnoremap <leader>rrlv :RRenameLocalVariable<cr>
-vnoremap <leader>rriv :RRenameInstanceVariable<cr>
-vnoremap <leader>rem  :RExtractMethod<cr>
-
-" Ruby rubocop
-let g:vimrubocop_keymap = 0
-nmap <Leader>rc :RuboCop<CR>
 
 
 "*****************************************************************************
@@ -922,46 +879,3 @@ nmap <Leader>rc :RuboCop<CR>
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
-
-"*****************************************************************************
-"" Convenience variables
-"*****************************************************************************
-
-" vim-airline
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-
-let g:airline_powerline_fonts = 1
-
-if !exists('g:airline_powerline_fonts')
-  let g:airline#extensions#tabline#left_sep = ' '
-  let g:airline#extensions#tabline#left_alt_sep = '|'
-  let g:airline_left_sep          = '▶'
-  let g:airline_left_alt_sep      = '»'
-  let g:airline_right_sep         = '◀'
-  let g:airline_right_alt_sep     = '«'
-  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
-  let g:airline#extensions#readonly#symbol   = '⊘'
-  let g:airline#extensions#linecolumn#prefix = '¶'
-  let g:airline#extensions#paste#symbol      = 'ρ'
-  let g:airline_symbols.linenr    = '␊'
-  let g:airline_symbols.branch    = '⎇'
-  let g:airline_symbols.paste     = 'ρ'
-  let g:airline_symbols.paste     = 'Þ'
-  let g:airline_symbols.paste     = '∥'
-  let g:airline_symbols.whitespace = 'Ξ'
-else
-  let g:airline#extensions#tabline#left_sep = ''
-  let g:airline#extensions#tabline#left_alt_sep = ''
-
-  " powerline symbols
-  let g:airline_left_sep = ''
-  let g:airline_left_alt_sep = ''
-  let g:airline_right_sep = ''
-  let g:airline_right_alt_sep = ''
-  let g:airline_symbols.branch = ''
-  let g:airline_symbols.readonly = ''
-  let g:airline_symbols.linenr = ''
-endif
-
