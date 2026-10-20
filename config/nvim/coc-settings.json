@@ -16,7 +16,6 @@
   "diagnostic.enableMessage": "always",
   "diagnostic.checkCurrentLine": true,
   "javascript.format.enabled": true,
-  "solargraph.useBundler": true,
   "suggest.languageSourcePriority": 100,
   "suggest.localityBonus": false,
   "suggest.minTriggerInputLength": 1,
@@ -26,6 +25,19 @@
   "tsserver.formatOnType": false,
   "elixir.pathToElixirLS": "/home/iquesada/elixir-ls/release/language_server.sh",
   "languageserver": {
+    "ruby-lsp": {
+      "command": "ruby-lsp",
+      "filetypes": [
+        "ruby"
+      ],
+      "rootPatterns": [
+        "Gemfile",
+        ".git/"
+      ],
+      "initializationOptions": {
+        "formatter": "auto"
+      }
+    },
     "ccls": {
       "command": "ccls",
       "filetypes": [

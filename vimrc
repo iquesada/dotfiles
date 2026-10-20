@@ -55,9 +55,6 @@ Plug 'bronson/vim-trailing-whitespace'
 " Close brackets, parenthesis, etc
 Plug 'Raimondi/delimitMate'
 
-" Show indentation vertical lines
-Plug 'Yggdroot/indentLine'
-
 " Intellisense
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -73,11 +70,10 @@ Plug 'voldikss/vim-floaterm'
 " Surrondings " ' ( {
 Plug 'tpope/vim-surround'
 
-" Typescript
-Plug 'leafgarland/typescript-vim'
-
-" HCL
-Plug 'jvirtanen/vim-hcl'
+" Syntax highlighting and folding. Vim uses its bundled syntax files instead
+if has('nvim')
+  Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do': ':TSUpdate' }
+endif
 
 " Nerdtree icons
 Plug 'ryanoasis/vim-devicons'
@@ -96,16 +92,9 @@ Plug 'preservim/vim-markdown'
 " Maximize panes
 Plug 'szw/vim-maximizer'
 
-" Kotlin
-Plug 'udalov/kotlin-vim'
-
 " Fuzzy search
-if isdirectory('/usr/local/opt/fzf')
-  Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
-else
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-  Plug 'junegunn/fzf.vim'
-endif
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 
 "" Color
 Plug 'NLKNguyen/papercolor-theme'
@@ -114,24 +103,11 @@ Plug 'NLKNguyen/papercolor-theme'
 "" Custom bundles
 "*****************************************************************************
 
-Plug 'sbdchd/neoformat'
-
-" elixir
+" elixir. Neither Vim nor Neovim bundle elixir filetype/indent support
 Plug 'elixir-lang/vim-elixir'
 
-" C++
-Plug 'octol/vim-cpp-enhanced-highlight'
-
 " html
-"" HTML Bundle
-Plug 'hail2u/vim-css3-syntax'
 Plug 'mattn/emmet-vim'
-
-
-" javascript
-"" Javascript Bundle
-Plug 'jelera/vim-javascript-syntax'
-
 
 " ruby
 Plug 'tpope/vim-rails'
@@ -250,14 +226,6 @@ if has("gui_running")
     set transparency=7
   endif
 else
-  " IndentLine
-  let g:indentLine_enabled = 1
-  let g:indentLine_concealcursor = 'nc'
-  let g:indentLine_char = '┆'
-  let g:indentLine_faster = 1
-  let g:indentLine_fileTypeExclude = ['Avante', 'AvanteInput', 'markdown', 'help']
-
-  
   if $COLORTERM == 'gnome-terminal'
     set term=gnome-256color
   else
@@ -370,8 +338,6 @@ let g:floaterm_width = 0.8
 let g:floaterm_height = 0.8
 let g:floaterm_borderchars = ['─', '│', '─', '│', '┌', '┐', '┘', '└']
 hi FloatermBorderNF guibg='#4c556a' guifg='#ABB9CF'
-map <C-n> :FloatermNew ranger<CR>
-nnoremap <Leader>n :FloatermNew ranger<Enter>
 
 " lightline
 set noshowmode
@@ -390,7 +356,7 @@ let g:lightline#bufferline#enable_devicons = 1
 let g:lightline#bufferline#unnamed = '[No Name]'
 
 " Format
-noremap <leader>ff :Neoformat<CR>
+nnoremap <silent> <leader>ff :call CocActionAsync('format')<CR>
 
 "*****************************************************************************
 "" Abbreviations
@@ -648,26 +614,14 @@ nnoremap <Leader>yf :let @+ = expand("%:p")<CR>
 "" fzf.vim
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
-let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'deps/**' -prune -o -path '_build/**' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
 let g:fzf_layout = { 'window': { 'width': 0.6, 'height': 0.6 } }
-
-" The Silver Searcher
-if executable('ag')
-  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
-  set grepprg=ag\ --nogroup\ --nocolor
-endif
-
-" ripgrep
-if executable('rg')
-  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-  set grepprg=rg\ --vimgrep
-  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-endif
+set grepprg=rg\ --vimgrep
 
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>e :FZF -m<CR>
-nnoremap <silent> <leader>E :Ag<CR>
+nnoremap <silent> <leader>E :Rg<CR>
 
 " coc
 if has('nvim')
@@ -832,6 +786,38 @@ nnoremap <Leader>op :GBrowse<CR>
 set foldmethod=syntax
 set foldlevel=20
 
+" Indentation guides
+set list listchars=tab:┆\ ,leadmultispace:┆\ ,nbsp:␣
+augroup vimrc-nolist
+  autocmd!
+  autocmd FileType markdown,help setlocal nolist
+augroup END
+
+" Treesitter: highlight and fold with it whenever a parser exists.
+" Markdown keeps vim-markdown's folding
+if has('nvim')
+lua << EOF
+local ok, ts = pcall(require, 'nvim-treesitter')
+if ok then ts.install({
+  'bash', 'c', 'cpp', 'css', 'dockerfile', 'eex', 'elixir', 'erlang', 'go',
+  'gomod', 'gosum', 'hcl', 'heex', 'html', 'javascript', 'json', 'kotlin',
+  'lua', 'proto', 'ruby', 'sql', 'terraform', 'tsx', 'typescript', 'vim',
+  'vimdoc', 'yaml',
+}) end
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('vimrc-treesitter', { clear = true }),
+  callback = function(args)
+    if vim.bo[args.buf].filetype == 'markdown' then return end
+    if pcall(vim.treesitter.start, args.buf) then
+      vim.wo.foldmethod = 'expr'
+      vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    end
+  end,
+})
+EOF
+endif
+
 " elixir
 
 " erlang
@@ -844,9 +830,6 @@ autocmd Filetype html setlocal ts=2 sw=2 expandtab
 
 
 " javascript
-let g:javascript_enable_domhtmlcss = 1
-
-" vim-javascript
 augroup vimrc-javascript
   autocmd!
   autocmd FileType javascript set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
@@ -857,7 +840,7 @@ augroup END
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_rails = 1
-let g:coc_global_extensions = ['coc-solargraph', 'coc-elixir']
+let g:coc_global_extensions = ['coc-elixir']
 autocmd BufRead *.xlsx.axlsx set filetype=ruby
 
 augroup vimrc-ruby
