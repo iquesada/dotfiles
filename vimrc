@@ -9,9 +9,6 @@ endif
 
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-let g:vim_bootstrap_langs = "elixir,erlang,go,html,javascript,ruby,c++"
-let g:vim_bootstrap_editor = "vim"				" nvim or vim
-
 if !filereadable(vimplug_exists)
   if !executable("curl")
     echoerr "You have to install curl or first install vim-plug yourself!"
@@ -199,8 +196,8 @@ set ruler
 set number relativenumber
 augroup toggle_relative_number
   autocmd!
-  autocmd InsertEnter * if &filetype !~# '^Avante' | setlocal norelativenumber | endif
-  autocmd InsertLeave * if &filetype !~# '^Avante' | setlocal relativenumber | endif
+  autocmd InsertEnter * setlocal norelativenumber
+  autocmd InsertLeave * setlocal relativenumber
 augroup END
 
 set nolazyredraw
@@ -258,16 +255,10 @@ set title
 set titleold="Terminal"
 set titlestring=%F
 
-set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
-
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
 nnoremap n nzzzv
 nnoremap N Nzzzv
-
-if exists("*fugitive#statusline")
-  set statusline+=%{fugitive#statusline()}
-endif
 
 " maximize current split or return to previous
 noremap <C-w>m :MaximizerToggle<CR>
@@ -305,7 +296,7 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
 
-nmap <silent> <leader>gt :GoTestFuncEnv<CR>
+nmap <silent> <leader>gtf :GoTestFuncEnv<CR>
 nmap <silent> <leader>gta :GoTestEnv<CR>
 nmap <silent> <leader>gtt :GoAlternate<CR>
 
@@ -316,10 +307,9 @@ nmap <silent> <leader>gtt :GoAlternate<CR>
 " vim-test configuration
 """"""""""""""""""""""""""
 let test#filename_modifier = ":p"
-let test#neovim#term_position = "vert"
 let g:test#preserve_screen = 1
 let test#strategy = "vimux"
-nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>tn :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>ta :TestSuite<CR>
 nmap <silent> <leader>tl :TestLast<CR>
@@ -373,15 +363,11 @@ cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
 
-"" Polyglot
-let g:polyglot_disabled = ['elixir']
-
 "" NERDTree configuration
 let g:NERDTreeChDirMode=2
 let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
 let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
 let g:NERDTreeShowBookmarks=1
-let g:nerdtree_tabs_focus_on_files=1
 let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeWinSize = 50
 let NERDTreeShowHidden=1
@@ -391,7 +377,7 @@ nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTreeToggle<CR>
 
 " Grep project for word under cursor
-nnoremap <silent> <leader>f :Rg <C-R><C-W><CR>
+nnoremap <silent> <leader>fw :Rg <C-R><C-W><CR>
 
 " terminal emulation
 nnoremap <silent> <leader>sh :terminal<CR>
@@ -407,118 +393,9 @@ let g:splitjoin_join_mapping = ''
 nmap <Leader>J :SplitjoinJoin<cr>
 nmap <Leader>S :SplitjoinSplit<cr>
 
-" Markdown
-" set to 1, nvim will open the preview window after entering the Markdown buffer
-" default: 0
-let g:mkdp_auto_start = 0
-
-" set to 1, the nvim will auto close current preview window when changing
-" from Markdown buffer to another buffer
-" default: 1
-let g:mkdp_auto_close = 1
-
-" set to 1, Vim will refresh Markdown when saving the buffer or
-" when leaving insert mode. Default 0 is auto-refresh Markdown as you edit or
-" move the cursor
-" default: 0
-let g:mkdp_refresh_slow = 0
-
-" set to 1, the MarkdownPreview command can be used for all files,
-" by default it can be use in Markdown files only
-" default: 0
-let g:mkdp_command_for_global = 0
-
-" set to 1, the preview server is available to others in your network.
-" By default, the server listens on localhost (127.0.0.1)
-" default: 0
-let g:mkdp_open_to_the_world = 0
-
-" use custom IP to open preview page.
-" Useful when you work in remote Vim and preview on local browser.
-" For more details see: https://github.com/iamcco/markdown-preview.nvim/pull/9
-" default empty
-let g:mkdp_open_ip = ''
-
-" specify browser to open preview page
-" for path with space
-" valid: `/path/with\ space/xxx`
-" invalid: `/path/with\\ space/xxx`
-" default: ''
-let g:mkdp_browser = ''
-
-" set to 1, echo preview page URL in command line when opening preview page
-" default is 0
-let g:mkdp_echo_preview_url = 0
-
-" a custom Vim function name to open preview page
-" this function will receive URL as param
-" default is empty
-let g:mkdp_browserfunc = ''
-
-" options for Markdown rendering
-" mkit: markdown-it options for rendering
-" katex: KaTeX options for math
-" uml: markdown-it-plantuml options
-" maid: mermaid options
-" disable_sync_scroll: whether to disable sync scroll, default 0
-" sync_scroll_type: 'middle', 'top' or 'relative', default value is 'middle'
-"   middle: means the cursor position is always at the middle of the preview page
-"   top: means the Vim top viewport always shows up at the top of the preview page
-"   relative: means the cursor position is always at relative positon of the preview page
-" hide_yaml_meta: whether to hide YAML metadata, default is 1
-" sequence_diagrams: js-sequence-diagrams options
-" content_editable: if enable content editable for preview page, default: v:false
-" disable_filename: if disable filename header for preview page, default: 0
-let g:mkdp_preview_options = {
-    \ 'mkit': {},
-    \ 'katex': {},
-    \ 'uml': {},
-    \ 'maid': {},
-    \ 'disable_sync_scroll': 0,
-    \ 'sync_scroll_type': 'middle',
-    \ 'hide_yaml_meta': 1,
-    \ 'sequence_diagrams': {},
-    \ 'flowchart_diagrams': {},
-    \ 'content_editable': v:false,
-    \ 'disable_filename': 0,
-    \ 'toc': {}
-    \ }
-
-" use a custom Markdown style. Must be an absolute path
-" like '/Users/username/markdown.css' or expand('~/markdown.css')
-let g:mkdp_markdown_css = ''
-
-" use a custom highlight style. Must be an absolute path
-" like '/Users/username/highlight.css' or expand('~/highlight.css')
-let g:mkdp_highlight_css = ''
-
-" use a custom port to start server or empty for random
-let g:mkdp_port = ''
-
-" preview page title
-" ${name} will be replace with the file name
-let g:mkdp_page_title = '「${name}」'
-
-" use a custom location for images
-let g:mkdp_images_path = '/home/iquesada/.markdown_images'
-
-" recognized filetypes
-" these filetypes will have MarkdownPreview... commands
-let g:mkdp_filetypes = ['markdown']
-
-" set default theme (dark or light)
-" By default the theme is defined according to the preferences of the system
-let g:mkdp_theme = 'dark'
-
-" combine preview window
-" default: 0
-" if enable it will reuse previous opened preview window when you preview markdown file.
-" ensure to set let g:mkdp_auto_close = 0 if you have enable this option
-let g:mkdp_combine_preview = 0
-
-" auto refetch combine preview contents when change markdown buffer
-" only when g:mkdp_combine_preview is 1
-let g:mkdp_combine_preview_auto_refresh = 1
+" Markdown preview. Only non-default settings
+let g:mkdp_images_path = expand("~/.markdown_images")
+let g:mkdp_theme = "dark"
 
 "*****************************************************************************
 "" Functions
@@ -537,7 +414,7 @@ endif
 "" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
 augroup vimrc-sync-fromstart
   autocmd!
-  autocmd BufEnter * if &filetype !~# '^Avante' | :syntax sync maxlines=200 | endif
+  autocmd BufEnter * :syntax sync maxlines=200
 augroup END
 
 "" Remember cursor position
@@ -568,10 +445,6 @@ set autoread
 "" Split
 noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
 
 set splitbelow
 set splitright
@@ -583,16 +456,16 @@ vnoremap K :m '<-2<CR>gv=gv
 "" Git
 let g:fugitive_gitlab_domains = ['https://gitlab.otters.xyz/']
 noremap <Leader>ga :Gwrite<CR>
-noremap <Leader>gc :Gcommit<CR>
+noremap <Leader>gc :Git commit<CR>
 noremap <Leader>gph :Git push<CR>
 noremap <Leader>gpf :Git push --force<CR>
-noremap <Leader>gpl :Gpull<CR>
+noremap <Leader>gpl :Git pull<CR>
 noremap <Leader>gs :Git<CR>
 noremap <Leader>gb :Git blame<CR>
-noremap <Leader>gd :Gvdiff<CR>
-noremap <Leader>gr :Gremove<CR>
+noremap <Leader>gd :Gvdiffsplit<CR>
+noremap <Leader>gr :GRemove<CR>
 noremap <Leader>ge :Gedit<CR>
-noremap <Leader>gl :silent! Glog<CR>:bot copen<CR>
+noremap <Leader>gl :silent! Gclog<CR>:bot copen<CR>
 
 "" Tabs
 nnoremap <Tab> gt
@@ -601,9 +474,6 @@ nnoremap <silent> <S-t> :tabnew<CR>
 
 "" Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
-
-"" Opens an edit command with the path of the currently edited file filled in
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 "" Opens a tab edit command with the path of the currently edited file filled
 noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
@@ -643,10 +513,6 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 hi CocSearch ctermfg=12 guifg=#EBDD96
 hi CocMenuSel ctermbg=109 guibg=#18A3FF
-" hi CocMenuSel ctermbg=109 guibg=#13354A
-
-" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " " Use `:CocDiagnostics` to get all diagnostics of current buffer in location
@@ -674,7 +540,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * if &filetype !~# '^Avante' | silent call CocActionAsync('highlight') | endif
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -683,18 +549,10 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>ft  <Plug>(coc-format-selected)
 nmap <leader>ft  <Plug>(coc-format-selected)
 
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? coc#_select_confirm() :
-"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-let g:coc_snippet_next = '<tab>'
 
 " Disable visualbell
 set noerrorbells visualbell t_vb=
@@ -751,31 +609,14 @@ if v:version >= 700
   au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
 endif
 
-" Workspaces configuration
-let g:workspace_autosave = 0
-let g:workspace_autosave_always = 0
-let g:workspace_autosave_ignore = ['gitcommit', 'qf', 'floaterm']
-let g:workspace_autosave_untrailspaces = 0
-let g:workspace_session_name = '.session.vim'
-
-" hclfmt confinguration
-let g:hcl_fmt_autosave = 1
-
-" Workspaces configuration
-let g:workspace_autosave = 0
-
-"" Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
 " Quickly source .vimrc
-nnoremap <leader>r :source $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " Quickly quit editting without save
-nnoremap <leader>qq :qa!<CR>
+nnoremap <leader>Q :qa!<CR>
 
-"" Open on GitHub
-nnoremap <Leader>o :.GBrowse<CR>
+"" Open on GitLab/GitHub: current line or whole file
+nnoremap <Leader>ol :.GBrowse<CR>
 nnoremap <Leader>op :GBrowse<CR>
 
 "*****************************************************************************
