@@ -30,7 +30,7 @@ def makelinks(path = "."):
 
     for fname in listdir(path):
         # skip this script and files starting with a dot
-        if fname == normpath(__file__) or fname[0] == '.' or (path == "." and fname == "ia"):
+        if fname == normpath(__file__) or fname[0] == '.' or (path == "." and fname == "ai"):
             print("skipping %s" % fname)
             continue
 
@@ -43,16 +43,16 @@ def makelinks(path = "."):
         else:
             print("neither file nor dir: %s" % filepath)
 
-def ia_target_dir(kind):
+def ai_target_dir(kind):
     # Claude Code: ~/.claude/<kind>, Cursor: ~/.cursor/<kind>
     for tool in (".claude", ".cursor"):
         if isdir(join(homedir, tool, kind)):
             return join(homedir, tool, kind)
     return None
 
-def linkia(kind):
-    source_dir = join(dotfiles, "ia", kind)
-    target_dir = ia_target_dir(kind)
+def linkai(kind):
+    source_dir = join(dotfiles, "ai", kind)
+    target_dir = ai_target_dir(kind)
     if not isdir(source_dir):
         return
     if target_dir is None:
@@ -75,5 +75,5 @@ if abspath(".") != dotfiles:
     exit("ERROR: script must be run from ~/.dotfiles")
 
 makelinks()
-linkia("agents")
-linkia("skills")
+linkai("agents")
+linkai("skills")
