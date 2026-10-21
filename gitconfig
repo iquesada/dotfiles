@@ -4,9 +4,6 @@
         insteadOf = https://gitlab.otters.xyz/
 [remote]
   prune = true
-[user]
-	name = Iñaki Quesada
-	email = iquesada@proton.me
 [color]
 	ui = true
 [core]
@@ -46,3 +43,5 @@
 	required = true
 [init]
 	defaultBranch = main
+[include]
+	path = ~/.gitconfig.local
