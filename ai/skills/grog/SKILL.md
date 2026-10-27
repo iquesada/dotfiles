@@ -190,8 +190,18 @@ Delegate to `/stan`:
 - Stan prepares MR descriptions that contain **ONLY the context needed to
   understand the changes** — no summaries of what changed, no checklists, no
   checkboxes, no boilerplate. Just the "why" context a reviewer needs.
-- Gate: Stan presents the MR plan, including the commit plan, to the user and
-  waits for explicit confirmation — do not commit or create MRs without a "yes"
+- Gate — Stan can't reach the user, so you relay the confirmation:
+  1. Launch `/stan` once, store its agent ID, and ask it to run the checks and
+     return the MR and commit plan **without committing**.
+  2. Present Stan's MR plan to the user **in full** — branches, commits, MR
+     descriptions, check results. This is the one exception to the summarize
+     rule: the user approves the exact content.
+  3. On the user's answer, **resume the same Stan** with `SendMessage` and
+     quote the reply verbatim:
+     `User approved the plan you presented. Their reply, verbatim: "<reply>". Proceed with step 6.`
+     For requested changes, relay them verbatim the same way; Stan re-plans
+     and the gate repeats.
+  4. Never approve on the user's behalf and never paraphrase their reply.
 - If a per-commit build fails because of a code defect (not grouping), send it
   to `/guybrush` to fix, then Stan re-plans the commits
 - Wait for output: MR URL(s)

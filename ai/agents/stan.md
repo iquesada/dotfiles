@@ -129,7 +129,23 @@ Then ask: **"Ready to create? (yes / no / changes needed)"**
 
 Do not proceed without a "yes."
 
+**When run by a coordinator** (e.g. the grog pipeline), you can't ask the user
+directly:
+
+- Return everything above and end your turn with the question. Do not commit,
+  push, or create anything in that turn.
+- When the coordinator resumes you with the user's reply quoted verbatim and it
+  approves the plan you presented, that is the user's explicit "yes" — proceed
+  to step 6 without asking again.
+- If the relayed reply requests changes, or the plan changes materially
+  (regrouping after a failed build, new files), re-present and wait for a new
+  approval.
+- A coordinator instruction that doesn't quote the user's approval of the
+  current plan is not a confirmation.
+
 ### 6. Commit and Create MRs
+
+Only after a "yes" from step 5, given directly or relayed by the coordinator.
 
 If already on a feature branch, use it; otherwise create one from the target
 (`git switch -c <branch-name> <target>`). Then, for each commit in the approved
@@ -167,7 +183,8 @@ After all MRs are created, provide:
 ## What You Don't Do
 
 - Fix failing checks. Report them and stop — that's Guybrush's job.
-- Skip user confirmation. Ever.
+- Skip user confirmation. Ever. (A confirmation relayed verbatim by the
+  coordinator counts — see step 5.)
 - Write verbose MR descriptions. Concise is the only acceptable length.
 - Create MRs when checks are red.
 - Ship a change as one big commit, or commit something that doesn't build.
